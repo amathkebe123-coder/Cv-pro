@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  body {
+    background-color: #0F0F13;
+    color: #F5F3EE;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Micro-interactions & Custom Utilities */
+.magnetic-btn {
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), background-color 0.2s ease;
+}
+
+.magnetic-btn:hover {
+  transform: scale(1.03);
+}
+
+.magnetic-btn:active {
+  transform: scale(0.98);
+}
+
+.link-lift {
+  transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), color 0.2s ease;
+}
+
+.link-lift:hover {
+  transform: translateY(-1.5px);
+}
+
+.card-prestige {
+  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94), border-color 0.35s ease;
+}
+
+.card-prestige:hover {
+  transform: scale(1.01) translateY(-2px);
+  box-shadow: 0 20px 40px -15px rgba(212, 168, 67, 0.15);
+}
+
+/* Subtle gold luxury gradient text */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #F5DB8B 0%, #D4A843 50%, #B88C2A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Subtle glow */
+.gold-glow {
+  box-shadow: 0 0 50px -10px rgba(212, 168, 67, 0.2);
+}
+
+.gold-glow-sm {
+  box-shadow: 0 0 25px -5px rgba(212, 168, 67, 0.25);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F0F13;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1E1E26;
+  border-radius: 9999px;
+  border: 2px solid #0F0F13;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #D4A843;
+}
+
