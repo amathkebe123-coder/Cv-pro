@@ -26,8 +26,11 @@ import {
   X,
   Compass,
   BookOpen,
-  Languages
+  Languages,
+  MessageCircle
 } from 'lucide-react';
+import ContactModal from './components/ContactModal';
+import { CONTACT_CONFIG } from './config/contact';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,6 +38,7 @@ export default function App() {
   const [copied, setCopied] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [contactModalOpen, setContactModalOpen] = useState(false);
 
   const heroRef = useRef(null);
   const heroPhotoRef = useRef(null);
@@ -219,7 +223,7 @@ export default function App() {
   // Micro-interaction: Confetti & Copy
   const handleCopyEmail = (e) => {
     e.preventDefault();
-    navigator.clipboard.writeText('Mouhamethkebe123@gmail.com');
+    navigator.clipboard.writeText(CONTACT_CONFIG.email);
     setCopied(true);
     confetti({
       particleCount: 45,
@@ -242,7 +246,7 @@ export default function App() {
     const cvContent = `=====================================================
 MOUHAMETH KÉBÉ — CURRICULUM VITAE
 Étudiant en Licence Informatique | Entrepreneur Digital & Créateur de SaaS
-Email: Mouhamethkebe123@gmail.com | Localisation: Thiès, Sénégal
+Email: ${CONTACT_CONFIG.email} | WhatsApp: ${CONTACT_CONFIG.phone} | Localisation: Thiès, Sénégal
 =====================================================
 
 PROFIL PROFESSIONNEL:
@@ -342,6 +346,15 @@ LANGUES:
 
           {/* CTA & Mobile Toggle */}
           <div className="flex items-center gap-3">
+            {/* Quick Contact Button */}
+            <button
+              onClick={() => setContactModalOpen(true)}
+              className="magnetic-btn hidden lg:inline-flex items-center gap-2 bg-charcoal-800 hover:bg-charcoal-700 text-gold-400 border border-gold-500/30 px-3.5 py-2 rounded-full font-medium text-xs tracking-wide transition-all"
+            >
+              <span>Me contacter</span>
+            </button>
+
+            {/* Download CV Button */}
             <button
               onClick={handleDownloadCV}
               className="magnetic-btn hidden sm:inline-flex items-center gap-2 bg-gold-500 hover:bg-gold-400 text-charcoal-950 px-4 py-2 rounded-full font-semibold text-xs tracking-wide uppercase transition-all shadow-md shadow-gold-500/20"
@@ -399,16 +412,30 @@ LANGUES:
             >
               Contact
             </a>
-            <button
-              onClick={() => {
-                setMobileMenuOpen(false);
-                handleDownloadCV();
-              }}
-              className="w-full inline-flex items-center justify-center gap-2 bg-gold-500 text-charcoal-950 py-3 rounded-full font-semibold text-sm uppercase tracking-wider"
-            >
-              <Download className="w-4 h-4" />
-              Télécharger CV
-            </button>
+
+            <div className="pt-2 flex flex-col gap-2.5">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setContactModalOpen(true);
+                }}
+                className="w-full inline-flex items-center justify-center gap-2 bg-charcoal-800 border border-gold-500/40 text-gold-400 py-3 rounded-full font-semibold text-sm tracking-wide"
+              >
+                <Send className="w-4 h-4" />
+                <span>Me contacter</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  handleDownloadCV();
+                }}
+                className="w-full inline-flex items-center justify-center gap-2 bg-gold-500 text-charcoal-950 py-3 rounded-full font-semibold text-sm uppercase tracking-wider"
+              >
+                <Download className="w-4 h-4" />
+                <span>Télécharger CV</span>
+              </button>
+            </div>
           </div>
         )}
       </header>
@@ -509,13 +536,14 @@ LANGUES:
               <span>Télécharger mon CV</span>
             </button>
 
-            <a
-              href="#contact"
+            {/* "Me contacter" Button -> Triggers Contact Modal */}
+            <button
+              onClick={() => setContactModalOpen(true)}
               className="magnetic-btn inline-flex items-center gap-2 bg-charcoal-850/80 hover:bg-charcoal-800 text-cream-100 border border-charcoal-700 hover:border-gold-500/50 px-7 py-3.5 rounded-full font-semibold text-sm tracking-wide transition-all"
             >
               <span>Me contacter</span>
               <ArrowUpRight className="w-4 h-4 text-gold-400" />
-            </a>
+            </button>
           </div>
 
         </div>
@@ -1236,14 +1264,14 @@ LANGUES:
           {/* Interactive Contact Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-12">
             
-            {/* Email with copy micro-interaction */}
+            {/* Email Direct with copy micro-interaction */}
             <div className="contact-item bg-charcoal-850 rounded-[2rem] p-6 border border-charcoal-700 hover:border-gold-500/50 flex flex-col items-center text-center transition-all">
               <div className="w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400 mb-3">
                 <Mail className="w-5 h-5" />
               </div>
               <span className="text-xs font-mono text-cream-300 uppercase mb-1">Email Direct</span>
               <span className="text-sm font-semibold text-cream-100 break-all mb-4">
-                Mouhamethkebe123@gmail.com
+                {CONTACT_CONFIG.email}
               </span>
               <button
                 onClick={handleCopyEmail}
@@ -1277,36 +1305,37 @@ LANGUES:
               </p>
             </div>
 
-            {/* Disponibilité & Téléchargement */}
+            {/* WhatsApp & Échange Direct */}
             <div className="contact-item bg-charcoal-850 rounded-[2rem] p-6 border border-charcoal-700 hover:border-gold-500/50 flex flex-col items-center text-center transition-all">
-              <div className="w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/20 flex items-center justify-center text-gold-400 mb-3">
-                <Send className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-3">
+                <Phone className="w-5 h-5" />
               </div>
-              <span className="text-xs font-mono text-cream-300 uppercase mb-1">Disponibilité</span>
+              <span className="text-xs font-mono text-cream-300 uppercase mb-1">WhatsApp & Direct</span>
               <span className="text-sm font-semibold text-emerald-400 mb-4 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Ouvert aux opportunités
+                {CONTACT_CONFIG.phone}
               </span>
-              <a
-                href="mailto:Mouhamethkebe123@gmail.com?subject=Prise%20de%20contact%20-%20Mouhameth%20Kebe&body=Bonjour%20Mouhameth,"
+              <button
+                onClick={() => setContactModalOpen(true)}
                 className="magnetic-btn w-full mt-auto inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-gold-500 text-charcoal-950 font-bold text-xs font-mono hover:bg-gold-400 transition-colors"
               >
-                <Mail className="w-3.5 h-3.5" />
-                <span>M'envoyer un mail</span>
-              </a>
+                <Send className="w-3.5 h-3.5" />
+                <span>Me contacter</span>
+              </button>
             </div>
 
           </div>
 
-          {/* Main Action Button */}
+          {/* Main Action Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <a
-              href="mailto:Mouhamethkebe123@gmail.com"
+            {/* "Commencer une conversation" -> Triggers Contact Modal */}
+            <button
+              onClick={() => setContactModalOpen(true)}
               className="magnetic-btn inline-flex items-center gap-2.5 bg-gold-500 hover:bg-gold-400 text-charcoal-950 px-8 py-4 rounded-full font-bold text-sm tracking-wide uppercase transition-all shadow-xl shadow-gold-500/25"
             >
               <Send className="w-4 h-4 stroke-[2.5]" />
-              <span>Démarrer une conversation</span>
-            </a>
+              <span>Commencer une conversation</span>
+            </button>
 
             <button
               onClick={handleDownloadCV}
@@ -1338,20 +1367,33 @@ LANGUES:
             </p>
           </div>
 
-          <div className="flex items-center gap-3 bg-charcoal-900 border border-charcoal-800 px-4 py-2 rounded-full">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            <span className="font-mono text-xs text-cream-200">
-              En ligne — Thiès, Sénégal
-            </span>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setContactModalOpen(true)}
+              className="text-xs font-mono text-gold-400 hover:text-gold-300 underline underline-offset-4 transition-colors"
+            >
+              Me contacter
+            </button>
+            <div className="flex items-center gap-3 bg-charcoal-900 border border-charcoal-800 px-4 py-2 rounded-full">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span className="font-mono text-xs text-cream-200">
+                En ligne — Thiès, Sénégal
+              </span>
+            </div>
           </div>
 
         </div>
       </footer>
 
+      {/* Modal de contact centralisée */}
+      <ContactModal
+        isOpen={contactModalOpen}
+        onClose={() => setContactModalOpen(false)}
+      />
+
     </div>
   );
 }
-
